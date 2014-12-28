@@ -67,3 +67,6 @@ target/
 pyvenv.cfg
 
 .idea/
+
+# Added because of using my real credential for testing
+credentials.py

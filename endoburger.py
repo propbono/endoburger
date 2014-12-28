@@ -7,11 +7,7 @@ __author__ = 'propbono'
 from bs4 import BeautifulSoup
 import requests
 import gspread
-
-ENDOMONDO_USER = ''
-ENDMONDO_PASSWORD = ''
-GOOGLE_USER = ''
-GOOGLE_PASSWORD = ''
+import credentials
 
 #1 get endomondo site
 def get_burgers_from_html(endo_page):
@@ -99,5 +95,7 @@ def update_number_of_burgers_in_spreadsheet(user, password, endomondo_user,
 #5 update cells
 #6 return curent values
 
-update_number_of_burgers_in_spreadsheet(GOOGLE_USER, GOOGLE_PASSWORD,
-                                        ENDOMONDO_USER, ENDMONDO_PASSWORD)
+update_number_of_burgers_in_spreadsheet(credentials.GOOGLE_USER,
+                                        credentials.GOOGLE_PASSWORD,
+                                        credentials.ENDOMONDO_USER,
+                                        credentials.ENDMONDO_PASSWORD)

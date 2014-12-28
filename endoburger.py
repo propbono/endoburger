@@ -1,22 +1,34 @@
-import bs4
-import time
-
-
-__author__ = 'propbono'
+__author__ = 'Grzegorz Mozer - propbono@gmail.com'
 
 from bs4 import BeautifulSoup
 import requests
 import gspread
 import credentials
+import time
 
-#1 get endomondo site
-def get_burgers_from_html(endo_page):
+
+def _get_number_of_burned_burgers(endmondo_password, endomondo_user):
+    burgers_to_update = ""
+    if endomondo_user and endmondo_password:
+        burgers_to_update = _get_endomondo_site(endomondo_user,
+                                               endmondo_password)
+    else:
+        endomondo_user = input("Endomondo login: ")
+        endmondo_password = input("Endomondo password: ")
+        try:
+            burgers_to_update = _get_endomondo_site(endomondo_user,
+                                                   endmondo_password)
+        except:
+            "Login or password incorrect"
+    return burgers_to_update
+
+def _get_burgers_from_html(endo_page):
     html = BeautifulSoup(endo_page.content)
     burned_burgers = html.find("li", class_ = "burgers").find("span",
                                                               class_ = "value")
     return burned_burgers.string
 
-def get_endomondo_site(endo_user, endo_password):
+def _get_endomondo_site(endo_user, endo_password):
     with requests.Session() as session:
         endomondo_login_url = "https://www.endomondo.com/login"
         endomondo_home_url = "https://www.endomondo.com/home"
@@ -38,27 +50,9 @@ def get_endomondo_site(endo_user, endo_password):
         #2 parse site adn return burned burgers
         endo_page = session.get(endomondo_home_url)
 
-        burned_burgers = get_burgers_from_html(endo_page)
+        burned_burgers = _get_burgers_from_html(endo_page)
 
         return burned_burgers
-
-
-#3 create google client
-def _get_number_of_burned_burgers(endmondo_password, endomondo_user):
-    burgers_to_update = ""
-    if endomondo_user and endmondo_password:
-        burgers_to_update = get_endomondo_site(endomondo_user,
-                                               endmondo_password)
-    else:
-        endomondo_user = input("Endomondo login: ")
-        endmondo_password = input("Endomondo password: ")
-        try:
-            burgers_to_update = get_endomondo_site(endomondo_user,
-                                                   endmondo_password)
-        except:
-            "Login or password incorrect"
-    return burgers_to_update
-
 
 def update_number_of_burgers_in_spreadsheet(user, password, endomondo_user,
                                             endmondo_password):
@@ -87,13 +81,21 @@ def update_number_of_burgers_in_spreadsheet(user, password, endomondo_user,
     spreadsheet.update_acell("B5", burgers_to_update)
     end_time_google = time.time()
 
-    print("Burgers burned: ", burgers_to_update)
-    print("Endomondo time: ", (end_time_endomondo-start_time_endomondo))
-    print("Google time: ", (end_time_google-start_time_google))
 
-#4 get proper spreadsheet
-#5 update cells
-#6 return curent values
+    print("Burgers burned: ", burgers_to_update)
+    print("You have {0} hamburgers to distribute.".format(burgers_to_use))
+    print("You can eat {0} hamburgers".format(burgers_to_eat))
+    print("You can eat {0} kebabs.".format(kebabs_to_eat))
+    print("You can eat {0} pizzas.".format(pizzas_to_eat))
+    print()
+    running_time_endomondo = end_time_endomondo - start_time_endomondo
+    print("Running time - Endomondo: ",
+          round(running_time_endomondo,2))
+    running_time_google = end_time_google - start_time_google
+    print("Running time - Google: ", round(running_time_google,2))
+    print("Running time - All: ", round(
+        (running_time_endomondo+running_time_google),2))
+
 
 update_number_of_burgers_in_spreadsheet(credentials.GOOGLE_USER,
                                         credentials.GOOGLE_PASSWORD,

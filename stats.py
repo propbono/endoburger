@@ -10,4 +10,11 @@ class Stats:
         self.time_stats = ''
 
 
-stats = Stats()
+
+class TimeStats:
+    def __init__(self):
+        self.start_time = ''
+        self.end_time = ''
+        self.endomondo_time = ''
+        self.google_time = ''
+        self.whole_time = ''

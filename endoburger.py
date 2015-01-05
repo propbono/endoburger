@@ -69,16 +69,15 @@ def update_number_of_burgers_in_spreadsheet(user, password, endomondo_user,
     spreadsheet = client.open(spreadsheet_name).sheet1
 
     current_burgers_count = spreadsheet.acell("B5").value
-    burgers_to_use = spreadsheet.acell("D5").value
-    burgers_to_eat = spreadsheet.acell("G7").value
-    kebabs_to_eat =spreadsheet.acell("H7").value
-    pizzas_to_eat = spreadsheet.acell("I7").value
-
-
 
     end_time_endomondo = time.time()
 
     spreadsheet.update_acell("B5", burgers_to_update)
+
+    burgers_to_use = spreadsheet.acell("D5").value
+    burgers_to_eat = spreadsheet.acell("G7").value
+    kebabs_to_eat =spreadsheet.acell("H7").value
+    pizzas_to_eat = spreadsheet.acell("I7").value
     end_time_google = time.time()
 
 
